@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
+import { AnimatePresence } from 'framer-motion';
 
 import Landing from './Components/Landing';
 import ProductPage from './Components/ProductPage';
@@ -7,10 +8,15 @@ import Article from './Components/Article';
 import About from './Components/about'
 import Login from './Components/login';
 import Shop from './Components/Shop'
-const App = () => {
+import { AuthProvider } from './context/AuthContext';
+
+// AnimationRoutes component to handle route transitions
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landing/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/About-us" element={<About/>}/>
@@ -18,7 +24,17 @@ const App = () => {
         <Route path="/shop" element={<Shop/>}/>
         <Route path="/Product-Page" element={<ProductPage/>}/>
       </Routes>
-    </BrowserRouter>
+    </AnimatePresence>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AnimatedRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
